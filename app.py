@@ -6,7 +6,6 @@ import streamlit as st
 # ===================== دوال مساعدة =====================
 
 def log_violation(plate_number, violation_type, file_path="violations.csv"):
-    "التاريخ": datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
     """
     تسجيل مخالفة جديدة في ملف CSV
     
