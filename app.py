@@ -170,7 +170,7 @@ def log_violation(plate_number, violation_type):
     col3.metric("مستوى الازدحام الحالي", "High", "85%")
 
     if choice == "الرئيسية":
-    st.title("مرحباً بك في نظام AeroPark")
+     st.title("مرحباً بك في نظام AeroPark")
         
     st.markdown("""
     ### نظام إدارة المواقف الذكي باستخدام الدرونز 🚁
