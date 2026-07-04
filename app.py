@@ -3,7 +3,7 @@ import pandas as pd
 import plotly.express as px
 import streamlit as st
 import datetime
-import random  # ⬅️ أضف هذا للمحاكاة
+import random
 
 # ===================== دوال مساعدة =====================
 
@@ -26,19 +26,30 @@ def get_system_status():
 def get_recent_alerts():
     """محاكاة التنبيهات الأخيرة"""
     return [
-        {"النوع": "info", "الرسالة": "تم إقلاع الدرون-01 لمسح المنطقة الجنوبية", "الوقت": "قبل 5 دقائق"},
-        {"النوع": "warning", "الرسالة": "تم رصد مركبة مخالفة في الموقف رقم 12", "الوقت": "قبل 10 دقائق"},
-        {"النوع": "success", "الرسالة": "تم تسجيل مخالفة جديدة للوحة HJK-789", "الوقت": "قبل 15 دقيقة"},
+        {
+            "النوع": "info",
+            "الرسالة": "تم إقلاع الدرون-01 لمسح المنطقة الجنوبية",
+            "الوقت": "قبل 5 دقائق"
+        },
+        {
+            "النوع": "warning",
+            "الرسالة": "تم رصد مركبة مخالفة في الموقف رقم 12",
+            "الوقت": "قبل 10 دقائق"
+        },
+        {
+            "النوع": "success",
+            "الرسالة": "تم تسجيل مخالفة جديدة للوحة HJK-789",
+            "الوقت": "قبل 15 دقيقة"
+        }
     ]
 
 def log_violation(plate_number, violation_type, file_path="violations.csv"):
-    """ارسال تنبية جديد"""
-    df_new = pd.DataFrame([{   
+    """تسجيل مخالفة جديدة"""
+    df_new = pd.DataFrame([{
         "رقم اللوحة": plate_number,
-        "نوع التنبية": violation_type,
+        "نوع المخالفة": violation_type,
         "التاريخ": datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
     }])
-    
     
     if os.path.exists(file_path):
         df_existing = pd.read_csv(file_path)
@@ -47,11 +58,11 @@ def log_violation(plate_number, violation_type, file_path="violations.csv"):
         df_updated = df_new
         
     df_updated.to_csv(file_path, index=False)
-    return f"✅ تم إرسال تنبية للوحة {plate_number}"
+    return f"✅ تم تسجيل مخالفة للوحة {plate_number}"
 
 
 def display_home_page():
-    """عرض الصفحة الرئيسية - مُعدلة ديناميكياً"""
+    """عرض الصفحة الرئيسية"""
     st.title("مرحباً بك في نظام AeroPark 🚁")
     
     st.markdown("""
@@ -59,7 +70,6 @@ def display_home_page():
     هذا النظام مصمم لمراقبة المواقف، رصد المخالفات، وتحليل الازدحام بشكل آلي بالكامل.
     """)
     
-    # ====== بيانات حية ======
     col1, col2, col3 = st.columns(3)
     
     drones = get_drone_status()
@@ -70,12 +80,10 @@ def display_home_page():
     col1.metric("عدد الدرونز المتاحة", f"{available_drones} / {len(drones)}")
     col2.metric("حالة النظام", status, status_icon)
     col3.metric("مخالفات اليوم", violations, f"+{violations-5}" if violations > 5 else "")
-    # ====== نهاية البيانات الحية ======
     
     st.divider()
     st.subheader("سجل التنبيهات الأخير")
     
-    # عرض التنبيهات الديناميكية
     alerts = get_recent_alerts()
     for alert in alerts:
         if alert["النوع"] == "info":
@@ -108,6 +116,35 @@ def display_congestion_analysis():
     col3.metric("مستوى الازدحام الحالي", "High", "85%")
 
 
+# ===================== صفحة الدرونز الجديدة =====================
+
+def display_drones_page():
+    """عرض صفحة بث مباشر من الدرون"""
+    st.title("🚁 بث مباشر من الدرون")
+    
+    # 1. حالة النظام المباشرة
+    col1, col2 = st.columns(2)
+    col1.metric("ارتفاع الدرون", "45 متر")
+    col2.metric("حالة البطارية", "88%")
+    
+    # 2. محاكاة رؤية الدرون مع تحليل ذكاء اصطناعي
+    st.subheader("رؤية الكاميرا الحية")
+    
+    # افترضي أن لديكِ صورة باسم 'drone_view.jpg' في مجلد المشروع
+    # سأضع هنا الكود الذي يضيف "تأثير" المربعات للسيارات
+    try:
+        # هنا يتم عرض صورة الدرون
+        st.image("drone_view.jpg", caption="بث مباشر: رصد السيارات في المواقف", use_container_width=True)
+        
+        # 3. محاكاة تحليل الذكاء الاصطناعي (أمر مبهر جداً!)
+        st.success("✅ تم اكتشاف 3 سيارات - حالة النظام: سليم")
+        st.warning("⚠️ تنبيه: تم اكتشاف سيارة مخالفة في الموقف رقم 12")
+    except:
+        st.error("جاري انتظار بث الكاميرا... تأكدي من مسار الصورة.")
+
+
+# ===================== الواجهة الرئيسية =====================
+
 def main():
     """الدالة الرئيسية"""
     st.set_page_config(
@@ -119,7 +156,7 @@ def main():
     st.sidebar.title("القائمة")
     choice = st.sidebar.radio(
         "اختر الصفحة",
-        ["الرئيسية", "تحليل الازدحام", "تسجيل المخالفات"]
+        ["الرئيسية", "تحليل الازدحام", "تسجيل المخالفات", "الدرونز"]  # ⬅️ أضفت "الدرونز"
     )
     
     if choice == "الرئيسية":
@@ -129,8 +166,8 @@ def main():
         st.title("تحليل الازدحام")
         display_congestion_analysis()
         
-    elif choice == "تسجيل المخالفات":
-        st.title("تسجيل المخالفات")
+    elif choice == "إرسال تنبية":
+        st.title("إرسال تنبية")
         
         col1, col2 = st.columns(2)
         
@@ -139,16 +176,20 @@ def main():
         
         with col2:
             violation = st.selectbox(
-                "نوع المخالفة",
+                "نوع التنبية",
                 ["وقوف خاطئ", "تجاوز السرعة", "وقوف ممنوع"]
             )
         
-        if st.button("تسجيل المخالفة"):
+        if st.button("إرسال تنبية"):
             if plate:
                 result = log_violation(plate, violation)
                 st.success(result)
             else:
                 st.error("❌ الرجاء إدخال رقم اللوحة")
+    
+    # ====== الصفحة الجديدة ======
+    elif choice == "الدرونز":
+        display_drones_page()
 
 
 if __name__ == "__main__":
