@@ -2,28 +2,19 @@ import os
 import pandas as pd
 import plotly.express as px
 import streamlit as st
+import datetime
 
 # ===================== دوال مساعدة =====================
 
 def log_violation(plate_number, violation_type, file_path="violations.csv"):
-    """
-    تسجيل مخالفة جديدة في ملف CSV
+    """تسجيل مخالفة جديدة في ملف CSV"""
     
-    Args:
-        plate_number (str): رقم لوحة المركبة
-        violation_type (str): نوع المخالفة
-        file_path (str): مسار ملف المخالفات
-    """
-    import datetime
-    
-    # إنشاء سجل المخالفة
     df_new = pd.DataFrame([{
         "رقم اللوحة": plate_number,
         "نوع المخالفة": violation_type,
         "التاريخ": datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
     }])
     
-    # تحديث الملف
     if os.path.exists(file_path):
         df_existing = pd.read_csv(file_path)
         df_updated = pd.concat([df_existing, df_new], ignore_index=True)
@@ -32,31 +23,6 @@ def log_violation(plate_number, violation_type, file_path="violations.csv"):
         
     df_updated.to_csv(file_path, index=False)
     print(f"✅ تم تسجيل مخالفة للوحة {plate_number} بنجاح.")
-
-
-def display_congestion_analysis():
-    """عرض تحليل الازدحام"""
-    # بيانات تجريبية
-    congestion_data = pd.DataFrame({
-        "الوقت": ["8:00", "10:00", "12:00", "14:00", "16:00"],
-        "نسبة الازدحام": [20, 45, 80, 65, 90]
-    })
-    
-    # رسم بياني تفاعلي
-    fig = px.area(
-        congestion_data, 
-        x="الوقت", 
-        y="نسبة الازدحام",
-        title="معدل الازدحام عبر اليوم",
-        color_discrete_sequence=['#FF4B4B']
-    )
-    st.plotly_chart(fig, use_container_width=True)
-    
-    # مؤشرات الأداء الرئيسية
-    col1, col2, col3 = st.columns(3)
-    col1.metric("مواقف متاحة", "12", "+2")
-    col2.metric("مواقف مشغولة", "88", "-5")
-    col3.metric("مستوى الازدحام الحالي", "High", "85%")
 
 
 def display_home_page():
@@ -68,7 +34,6 @@ def display_home_page():
     هذا النظام مصمم لمراقبة المواقف، رصد المخالفات، وتحليل الازدحام بشكل آلي بالكامل.
     """)
     
-    # بطاقات إحصائية سريعة
     col1, col2, col3 = st.columns(3)
     col1.metric("عدد الدرونز المتاحة", "2")
     col2.metric("حالة النظام", "مستقر", "Online")
@@ -80,6 +45,28 @@ def display_home_page():
     st.warning("⚠️ تم رصد مركبة مخالفة في الموقف رقم 12 - قبل 10 دقائق")
 
 
+def display_congestion_analysis():
+    """عرض تحليل الازدحام"""
+    congestion_data = pd.DataFrame({
+        "الوقت": ["8:00", "10:00", "12:00", "14:00", "16:00"],
+        "نسبة الازدحام": [20, 45, 80, 65, 90]
+    })
+    
+    fig = px.area(
+        congestion_data, 
+        x="الوقت", 
+        y="نسبة الازدحام",
+        title="معدل الازدحام عبر اليوم",
+        color_discrete_sequence=['#FF4B4B']
+    )
+    st.plotly_chart(fig, use_container_width=True)
+    
+    col1, col2, col3 = st.columns(3)
+    col1.metric("مواقف متاحة", "12", "+2")
+    col2.metric("مواقف مشغولة", "88", "-5")
+    col3.metric("مستوى الازدحام الحالي", "High", "85%")
+
+
 # ===================== الواجهة الرئيسية =====================
 
 def main():
@@ -89,14 +76,9 @@ def main():
         page_icon="🚁",
         layout="wide"
     )
-    with col1:
-     plate = st.text_input("رقم اللوحة")
-with col2:
-    violation = st.selectbox("نوع المخالفة", ["وقوف خاطئ", "تجاوز السرعة", "وقوف ممنوع"])
-if st.button("تسجيل المخالفة"):
+    
     # القائمة الجانبية
     st.sidebar.title("القائمة")
-    st.success(f"✅ تم تسجيل مخالفة للوحة {plate} بنجاح!")
     choice = st.sidebar.radio(
         "اختر الصفحة",
         ["الرئيسية", "تحليل الازدحام", "تسجيل المخالفات"]
@@ -105,25 +87,31 @@ if st.button("تسجيل المخالفة"):
     # عرض الصفحات
     if choice == "الرئيسية":
         display_home_page()
+        
     elif choice == "تحليل الازدحام":
         st.title("تحليل الازدحام")
         display_congestion_analysis()
+        
     elif choice == "تسجيل المخالفات":
         st.title("تسجيل المخالفات")
-        # نموذج إدخال المخالفة
-        col1, col2 = st.columns(2)
-        with col1:
-            plate = st.text_input("رقم اللوحة")
-        with col2:
-            violation = st.selectbox("نوع المخالفة", 
-                                    ["وقوف خاطئ", "تجاوز السرعة", "وقوف ممنوع"])
         
-        if st.button("تسجيل المخالفة"):
-            if plate:
-                log_violation(plate, violation)
-                st.success(f"✅ تم تسجيل مخالفة للوحة {plate} بنجاح!")
-            else:
-                st.error("❌ الرجاء إدخال رقم اللوحة")
+        col1, col2 = st.columns(2)
+        
+        with col1:  # ⬅️ هذا السطر يجب أن يليه مسافة بادئة
+            plate = st.text_input("رقم اللوحة")  # ⬅️ مسافة بادئة 4 مسافات
+        
+        with col2:  # ⬅️ هذا السطر يجب أن يليه مسافة بادئة
+            violation = st.selectbox(  # ⬅️ مسافة بادئة 4 مسافات
+                "نوع المخالفة",
+                ["وقوف خاطئ", "تجاوز السرعة", "وقوف ممنوع"]
+            )
+        
+        if st.button("تسجيل المخالفة"):  # ⬅️ هذا السطر يجب أن يليه مسافة بادئة
+            if plate:  # ⬅️ مسافة بادئة 4 مسافات
+                log_violation(plate, violation)  # ⬅️ مسافة بادئة 8 مسافات
+                st.success(f"✅ تم تسجيل مخالفة للوحة {plate} بنجاح!")  # ⬅️ مسافة بادئة 8 مسافات
+            else:  # ⬅️ مسافة بادئة 4 مسافات
+                st.error("❌ الرجاء إدخال رقم اللوحة")  # ⬅️ مسافة بادئة 8 مسافات
 
 
 # ===================== نقطة الدخول =====================
