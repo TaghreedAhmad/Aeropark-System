@@ -31,15 +31,14 @@ choice = st.sidebar.radio("القائمة", menu)
 if choice == "الرئيسية":
     st.title("لوحة تحكم AeroPark")
     st.write("أهلاً بك في نظام إدارة المواقف الذكي باستخدام الدرونز.")
-
-elif choice == "خريطة المواقف":
-    st.title("خريطة المواقف الحية")
-
+        # إضافة لمسة إبهار للمؤشرات
     col1, col2 = st.columns(2)
     col1.metric("المواقف الشاغرة", "12")
     col2.metric("عدد الدرونز المحلقة", "5")
     st.markdown("---") # خط فاصل جمالي
-
+    
+elif choice == "خريطة المواقف":
+    st.title("خريطة المواقف الحية")
 
     # 1. جلب البيانات
     df_parking = get_parking_status()
