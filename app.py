@@ -33,7 +33,7 @@ def get_recent_alerts():
 
 def log_violation(plate_number, violation_type, file_path="violations.csv"):
   """ارسال تنبية جديد"""
- df_new = pd.DataFrame([{
+     df_new = pd.DataFrame([{
         "رقم اللوحة": plate_number,
         "نوع التنبية": violation_type,
         "التاريخ": datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
