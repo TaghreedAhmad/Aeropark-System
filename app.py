@@ -59,6 +59,12 @@ elif choice == "خريطة المواقف":
 
     # 4. إنشاء الخريطة
     m = folium.Map(location=map_location, zoom_start=zoom)
+    folium.Marker(
+    [lat, lon],
+    popup="موقف رقم 1: متاح",
+    icon=folium.Icon(color="green")
+).add_to(m)
+    
 
     # 5. إضافة العلامات
     for idx, row in df_parking.iterrows():
