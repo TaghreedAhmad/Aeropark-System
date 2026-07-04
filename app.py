@@ -39,6 +39,19 @@ if choice == "الرئيسية":
     
 elif choice == "خريطة المواقف":
     st.title("خريطة المواقف الحية")
+import folium
+    from streamlit_folium import st_folium
+    
+    m = folium.Map(location=[24.7136, 46.6753], zoom_start=16)
+    
+    for i, row in df_parking.iterrows():
+        color = "green" if row['status'] == "متاح" else "red"
+        folium.Marker([row['lat'], row['lon']], 
+                      popup=f"الموقف رقم: {i} <br> الحالة: {row['status']}",
+                      icon=folium.Icon(color=color, icon="info-sign")).add_to(m)
+        folium.Circle([row['lat'], row['lon']], radius=15, color=color, fill=True).add_to(m)
+    
+    st_folium(m, width=700, height=500)
 
     # 1. جلب البيانات
     df_parking = get_parking_status()
@@ -56,8 +69,7 @@ elif choice == "خريطة المواقف":
     else:
         map_location = [24.7136, 46.6753] # Center for Riyadh
         zoom = 18
-
-   elif choice == "خريطة المواقف":
+        
     st.title("خريطة المواقف الحية")
     
     # 1. جلب البيانات هنا (يجب أن يكون df_parking معرفاً)
