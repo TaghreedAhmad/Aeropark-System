@@ -189,4 +189,4 @@ def log_violation(plate_number, violation_type):
     st.warning("تم رصد مركبة مخالفة في الموقف رقم 12 - قبل 10 دقائق")
     # كود معالجة الصور
     if مخالفة_مكتشفة:
-    log_violation("رقم_اللوحة", "وقوف خاطئ")
+     log_violation("رقم_اللوحة", "وقوف خاطئ")
