@@ -1,3 +1,4 @@
+import os
 import pandas as pd
 import plotly.express as px
 import streamlit as st
@@ -5,6 +6,7 @@ import streamlit as st
 # ===================== دوال مساعدة =====================
 
 def log_violation(plate_number, violation_type, file_path="violations.csv"):
+    "التاريخ": datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
     """
     تسجيل مخالفة جديدة في ملف CSV
     
@@ -88,9 +90,14 @@ def main():
         page_icon="🚁",
         layout="wide"
     )
-    
+    with col1:
+    plate = st.text_input("رقم اللوحة")
+with col2:
+    violation = st.selectbox("نوع المخالفة", ["وقوف خاطئ", "تجاوز السرعة", "وقوف ممنوع"])
+if st.button("تسجيل المخالفة"):
     # القائمة الجانبية
     st.sidebar.title("القائمة")
+    st.success(f"✅ تم تسجيل مخالفة للوحة {plate} بنجاح!")
     choice = st.sidebar.radio(
         "اختر الصفحة",
         ["الرئيسية", "تحليل الازدحام", "تسجيل المخالفات"]
