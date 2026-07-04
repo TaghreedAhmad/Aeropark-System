@@ -6,7 +6,7 @@ import pandas as pd
 import folium
 from streamlit_folium import st_folium
 import plotly.express as px
-
+import datatime
 # Placeholder function for parking status
 # In a real application, this would fetch data from sensors or a database
 def get_parking_status():
@@ -39,8 +39,6 @@ if choice == "الرئيسية":
     
 elif choice == "خريطة المواقف":
     st.title("خريطة المواقف الحية")
-import folium
-from streamlit_folium import st_folium
 m = folium.Map(location=[24.7136, 46.6753], zoom_start=16)
     
 for i, row in df_parking.iterrows():
@@ -72,10 +70,6 @@ folium.Circle([row['lat'], row['lon']], radius=15, color=color, fill=True).add_t
     
     # 1. جلب البيانات هنا (يجب أن يكون df_parking معرفاً)
     df_parking = get_parking_status() 
-    
-    # 2. الآن ضعي كود الخريطة هنا (تحت الـ elif مباشرة)
-    import folium
-    from streamlit_folium import st_folium
     
     m = folium.Map(location=[24.7136, 46.6753], zoom_start=16)
     
@@ -141,11 +135,6 @@ elif choice == "الدرونز":
 elif choice == "إدارة الازدحام":
     st.title("إدارة الازدحام")
     st.write("تحليل لحظي لمستويات الازدحام في المواقف.")
-
-    import pandas as pd
-import os
-from datetime import datetime
-
 def log_violation(plate_number, violation_type):
     file_path = "violations.csv"
     
