@@ -90,7 +90,7 @@ def main():
         layout="wide"
     )
     with col1:
-    plate = st.text_input("رقم اللوحة")
+     plate = st.text_input("رقم اللوحة")
 with col2:
     violation = st.selectbox("نوع المخالفة", ["وقوف خاطئ", "تجاوز السرعة", "وقوف ممنوع"])
 if st.button("تسجيل المخالفة"):
