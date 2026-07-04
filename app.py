@@ -57,32 +57,27 @@ elif choice == "خريطة المواقف":
         map_location = [24.7136, 46.6753] # Center for Riyadh
         zoom = 18
 
+    elif choice == "خريطة المواقف":
+    st.title("خريطة المواقف الحية")
+    
+    # 1. جلب البيانات هنا (يجب أن يكون df_parking معرفاً)
+    df_parking = get_parking_status() 
+    
+    # 2. الآن ضعي كود الخريطة هنا (تحت الـ elif مباشرة)
     import folium
-from streamlit_folium import st_folium
-
-# ننشئ الخريطة
-m = folium.Map(location=[24.7136, 46.6753], zoom_start=16)
-
-# دالة ذكية لإضافة النقاط
-for i, row in df_parking.iterrows():
-    # اختيار اللون بناءً على الحالة
-    color = "green" if row['status'] == "متاح" else "red"
+    from streamlit_folium import st_folium
     
-    # 1. إضافة الدبوس مع معلومات تفاعلية (Popup)
-    folium.Marker(
-        [row['lat'], row['lon']],
-        popup=f"الموقف رقم: {i} <br> الحالة: {row['status']}",
-        icon=folium.Icon(color=color, icon="info-sign")
-    ).add_to(m)
+    m = folium.Map(location=[24.7136, 46.6753], zoom_start=16)
     
-    # 2. إضافة دائرة مراقبة الدرون (نطاق التغطية)
-    folium.Circle(
-        location=[row['lat'], row['lon']],
-        radius=15, # نصف القطر بالمتر
-        color=color,
-        fill=True,
-        fill_opacity=0.2
-    ).add_to(m)
+    for i, row in df_parking.iterrows():
+        color = "green" if row['status'] == "متاح" else "red"
+        folium.Marker([row['lat'], row['lon']], 
+                      popup=f"الموقف رقم: {i} <br> الحالة: {row['status']}",
+                      icon=folium.Icon(color=color, icon="info-sign")).add_to(m)
+        folium.Circle([row['lat'], row['lon']], radius=15, color=color, fill=True).add_to(m)
+    
+    st_folium(m, width=700, height=500)
+
 
 # عرض الخريطة في Streamlit
 st_folium(m, width=700, height=500)
