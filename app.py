@@ -89,6 +89,7 @@ st_folium(m, width=700, height=500)
 
 
 elif choice == "المخالفات":
+
     st.title("سجل المخالفات")
     st.subheader("رصد السيارات المخالفة وتوثيقها")
 
