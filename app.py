@@ -57,7 +57,7 @@ elif choice == "خريطة المواقف":
         map_location = [24.7136, 46.6753] # Center for Riyadh
         zoom = 18
 
-    elif choice == "خريطة المواقف":
+   elif choice == "خريطة المواقف":
     st.title("خريطة المواقف الحية")
     
     # 1. جلب البيانات هنا (يجب أن يكون df_parking معرفاً)
