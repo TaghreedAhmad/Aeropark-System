@@ -1,6 +1,6 @@
 
 # This content is copied from cell 2hHD8SnT0Fgq
-!pip install streamlit folium streamlit-folium plotly
+
 import streamlit as st
 import pandas as pd
 import folium
