@@ -57,26 +57,36 @@ elif choice == "خريطة المواقف":
         map_location = [24.7136, 46.6753] # Center for Riyadh
         zoom = 18
 
-    # 4. إنشاء الخريطة
-    m = folium.Map(location=map_location, zoom_start=zoom)
-    folium.Marker(
-    [lat, lon],
-    popup="موقف رقم 1: متاح",
-    icon=folium.Icon(color="green")
-).add_to(m)
+    import folium
+from streamlit_folium import st_folium
+
+# ننشئ الخريطة
+m = folium.Map(location=[24.7136, 46.6753], zoom_start=16)
+
+# دالة ذكية لإضافة النقاط
+for i, row in df_parking.iterrows():
+    # اختيار اللون بناءً على الحالة
+    color = "green" if row['status'] == "متاح" else "red"
     
+    # 1. إضافة الدبوس مع معلومات تفاعلية (Popup)
+    folium.Marker(
+        [row['lat'], row['lon']],
+        popup=f"الموقف رقم: {i} <br> الحالة: {row['status']}",
+        icon=folium.Icon(color=color, icon="info-sign")
+    ).add_to(m)
+    
+    # 2. إضافة دائرة مراقبة الدرون (نطاق التغطية)
+    folium.Circle(
+        location=[row['lat'], row['lon']],
+        radius=15, # نصف القطر بالمتر
+        color=color,
+        fill=True,
+        fill_opacity=0.2
+    ).add_to(m)
 
-    # 5. إضافة العلامات
-    for idx, row in df_parking.iterrows():
-        color = "green" if row["status"] == "متاح" else "red"
-        folium.Marker(
-            [row["lat"], row["lon"]],
-            popup=f"الموقف رقم: {idx} - الحالة: {row['status']}",
-            icon=folium.Icon(color=color)
-        ).add_to(m)
+# عرض الخريطة في Streamlit
+st_folium(m, width=700, height=500)
 
-    # 6. عرض الخريطة
-    st_folium(m, width=700, height=500)
 
 elif choice == "المخالفات":
     st.title("سجل المخالفات")
