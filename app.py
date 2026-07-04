@@ -87,7 +87,6 @@ for i, row in df_parking.iterrows():
 # عرض الخريطة في Streamlit
 st_folium(m, width=700, height=500)
 
-
 elif choice == "المخالفات":
 
     st.title("سجل المخالفات")
