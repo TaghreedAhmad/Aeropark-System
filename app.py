@@ -32,10 +32,10 @@ def get_recent_alerts():
     ]
 
 def log_violation(plate_number, violation_type, file_path="violations.csv"):
-    """تسجيل مخالفة جديدة"""
+  """ارسال تنبية جديد"""
     df_new = pd.DataFrame([{
         "رقم اللوحة": plate_number,
-        "نوع المخالفة": violation_type,
+        "نوع التنبية": violation_type,
         "التاريخ": datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
     }])
     
@@ -46,7 +46,7 @@ def log_violation(plate_number, violation_type, file_path="violations.csv"):
         df_updated = df_new
         
     df_updated.to_csv(file_path, index=False)
-    return f"✅ تم تسجيل مخالفة للوحة {plate_number}"
+    return f"✅ تم إرسال تنبية للوحة {plate_number}"
 
 
 def display_home_page():
